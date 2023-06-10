@@ -5,6 +5,7 @@
 #include <wiringPi.h>
 #include <softPwm.h>
 #include <signal.h>
+#include <string.h>
 #include "parser.h"
 
 
@@ -25,11 +26,11 @@ void sigint(int sig){
     softPwmWrite(FAN_PIN, 0);
 }
 
-void read_config_file(contst char *cfg_path) {
+void read_config(const char *cfg_path) {
     config_option_t co;
     
     if ((co = read_config_file(cfg_path)) == NULL) {
-        perror("Can't read configuration (%s)", cfg_path);
+        fprintf(stderr, "Can't read configuration (%s)", cfg_path);
         exit (0);
     }
     while(1) {
