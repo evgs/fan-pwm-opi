@@ -30,3 +30,33 @@ max_temp = 70
 min_pwm = 20
 max_pwm = 100
 ```
+## How to control temperature
+
+Execute command
+
+```watch -n 1 'cat /sys/class/thermal/thermal_zone0/temp' ```
+Hit ^C to abort output
+
+## How to debug PWM settings
+
+```
+$ sudo systemctl stop fan-pwm.service
+$ cd ~/fan-pwm-opi
+$ sudo ./fan-pwm
+```
+
+You will receive
+```
+CPU: 50°C | PWM: 0%
+CPU: 50°C | PWM: 0%
+CPU: 68°C | PWM: 92%
+CPU: 68°C | PWM: 92%
+CPU: 70°C | PWM: 100%
+CPU: 70°C | PWM: 100%
+CPU: 69°C | PWM: 96%
+CPU: 68°C | PWM: 92%
+CPU: 51°C | PWM: 24%
+CPU: 49°C | PWM: 0%
+CPU: 49°C | PWM: 0%
+```
+Hit ^C to abort output
