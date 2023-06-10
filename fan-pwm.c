@@ -11,6 +11,7 @@
 
 int FAN_PIN = 10;
 int MIN_TEMP = 50;
+int MIN_HYST = 5;
 int MAX_TEMP = 70;
 int MIN_PWM = 20;
 int MAX_PWM = 100;
@@ -36,6 +37,7 @@ void read_config(const char *cfg_path) {
     }
     while(1) {
         if (strcmp(co->key, "min_temp")==0) MIN_TEMP = atoi(co->value);
+        if (strcmp(co->key, "min_hyst")==0) MIN_HYST = atoi(co->value);
         if (strcmp(co->key, "max_temp")==0) MAX_TEMP = atoi(co->value);
         if (strcmp(co->key, "min_pwm")==0) MIN_PWM = atoi(co->value);
         if (strcmp(co->key, "max_pwm")==0) MAX_PWM = atoi(co->value);
@@ -85,13 +87,19 @@ int main() {
         
         if (temp <= MIN_TEMP) {
             pwm_value = 0;
-        } else if (temp >= MAX_TEMP) {
-            pwm_value = MAX_PWM;
+        }
+        
+        if ((temp <= MIN_TEMP + MIN_HYST) && (pwm_value == 0)) {
+            // hold pwm off if below threshold
+            pwm_value = 0;
         } else if (PWM_EN) {
             temp_ratio = (float)(temp - MIN_TEMP) / (MAX_TEMP - MIN_TEMP);
             pwm_ratio = temp_ratio * (MAX_PWM - MIN_PWM);
             pwm_value = (int)(pwm_ratio + MIN_PWM);
         }
+
+        if (temp >= MAX_TEMP) {
+            pwm_value = MAX_PWM;
         
         softPwmWrite(FAN_PIN, pwm_value);
         
