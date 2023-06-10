@@ -9,7 +9,7 @@ struct config_option {
     char value[CONFIG_ARG_MAX_BYTES];
 };
 
-config_option_t read_config_file(char* path) {
+config_option_t read_config_file(const char* path) {
     FILE* fp;
     
     if ((fp = fopen(path, "r+")) == NULL) {
