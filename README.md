@@ -35,6 +35,7 @@ max_pwm = 100
 Execute command
 
 ```watch -n 1 'cat /sys/class/thermal/thermal_zone0/temp' ```
+
 Hit ^C to abort output
 
 ## How to debug PWM settings
