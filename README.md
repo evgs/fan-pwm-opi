@@ -2,7 +2,7 @@
 
 ## How to use:
 
-First run ```crontab - e``` and remove lines with old fan.sh
+First run ```remove-old-fan-script.sh``` to uninstall old script fan.sh from crontab
 
 ```shell
 $ cd ~
