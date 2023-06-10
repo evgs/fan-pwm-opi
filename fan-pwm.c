@@ -5,14 +5,17 @@
 #include <wiringPi.h>
 #include <softPwm.h>
 #include <signal.h>
+#include "parser.h"
 
-// Define
-#define FAN_PIN 10
-#define MIN_TEMP 50
-#define MAX_TEMP 70
+
+int FAN_PIN = 10;
+int MIN_TEMP = 50;
+int MAX_TEMP = 70;
+int MIN_PWM = 20;
+int MAX_PWM = 100;
+int PWM_EN = 1;
+
 #define CPU_TEMP_FILE "/sys/class/thermal/thermal_zone0/temp"
-#define MIN_PWM 20
-#define MAX_PWM 100
 
 void sigkill(int sig){
     softPwmWrite(FAN_PIN, 100);
@@ -22,11 +25,36 @@ void sigint(int sig){
     softPwmWrite(FAN_PIN, 0);
 }
 
+void read_config_file(contst char *cfg_path) {
+    config_option_t co;
+    
+    if ((co = read_config_file(cfg_path)) == NULL) {
+        perror("Can't read configuration (%s)", cfg_path);
+        exit (0);
+    }
+    while(1) {
+        if (strcmp(co->key, "min_temp")==0) MIN_TEMP = atoi(co->value);
+        if (strcmp(co->key, "ax_temp")==0) MAX_TEMP = atoi(co->value);
+        if (strcmp(co->key, "min_pwm")==0) MIN_PWM = atoi(co->value);
+        if (strcmp(co->key, "max_pwm")==0) MAX_PWM = atoi(co->value);
+        if (strcmp(co->key, "pwm")==0) PWM_EN = atoi(co->value);
+        //printf("Key: %s\nValue: %s\n", co->key, co->value);
+        if (co->prev != NULL) {
+            co = co->prev;
+        } else {
+            break;
+        }
+    }
+    
+}
 
 int main() {
     int temp;
     float temp_ratio, pwm_ratio;
     int pwm_value = 0;
+ 
+    read_config_file("~/fan-pwm-opi/fan.cfg");
+    
     
     if (wiringPiSetup() == -1) {
         printf("wiringPiSetup failed\n");
@@ -52,11 +80,11 @@ int main() {
         
         temp /= 1000;
         
-        if (temp < MIN_TEMP) {
+        if (temp <= MIN_TEMP) {
             pwm_value = 0;
-        } else if (temp > MAX_TEMP) {
+        } else if (temp >= MAX_TEMP) {
             pwm_value = MAX_PWM;
-        } else {
+        } else if (PWM_EN) {
             temp_ratio = (float)(temp - MIN_TEMP) / (MAX_TEMP - MIN_TEMP);
             pwm_ratio = temp_ratio * (MAX_PWM - MIN_PWM);
             pwm_value = (int)(pwm_ratio + MIN_PWM);
