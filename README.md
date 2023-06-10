@@ -1,13 +1,14 @@
 # fan-pwm-opi
 
-## Requirements:
-- Switch for fan control, connected to PD16 (by default)
-- or this https://github.com/evgs/kross-pi-hat
+## Требования:
+- Вентилятор должен быть подсоединён к одноплатнику через управляющий транзисторный ключ, (по умолчанию управление через пин PD16)
+- ИЛИ наличие кросс-платы https://github.com/evgs/kross-pi-hat
 
-## How to use:
+## Установка:
 
-First run ```remove-old-fan-script.sh``` to uninstall old script fan.sh from crontab
+Если ранее был настроен скрипт fan.sh с запуском через crontab, потребуется его отключить, например, скриптом ```remove-old-fan-script.sh```;
 
+Далее выполнить команды:
 ```shell
 $ cd ~
 $ git clone https://github.com/evgs/fan-pwm-opi
@@ -16,9 +17,9 @@ $ ./install.sh
 ```
 
 
-## How to configure
+## Настройка
 
-All settings placed in /etc/fan.cfg
+Файл конфигурации расположен в ```/etc/fan.cfg```, редактируется с правами суперпользователя
 
 ```fan.cfg
 # set pwm = 0  for on/off mode
@@ -30,27 +31,38 @@ pwm = 1
 min_temp = 50
 max_temp = 70
 
+# fan will be ON after temp will be higher min_temp+min_hyst
+min_hyst=5
+
 # some fans requires min_pwm >= 20% to startup
 min_pwm = 20
 max_pwm = 100
 ```
-## How to control temperature
 
-Execute command
+После редактирования требуется перезапуск сервиса:
+```
+$ sudo systemctl stop fan-pwm.service
+$ sudo systemctl start fan-pwm.service
+```
+
+## Наблюдение за температурой
+
+Может быть полезно при тонкой настройке порогов. Выполнить команду 
 
 ```watch -n 1 'cat /sys/class/thermal/thermal_zone0/temp' ```
 
-Hit ^C to abort output
+Нажать ^C для прерывания команды watch
 
-## How to debug PWM settings
+## Отладочный запуск для наблюдения за величиной PWM
 
+Сервис потребуется остановить, а затем запустить для вывода значений в терминал:
 ```
 $ sudo systemctl stop fan-pwm.service
 $ cd ~/fan-pwm-opi
 $ sudo ./fan-pwm
 ```
 
-You will receive
+В терминале можно наблюдать такие значения
 ```
 CPU: 50°C | PWM: 0%
 CPU: 50°C | PWM: 0%
@@ -64,4 +76,7 @@ CPU: 51°C | PWM: 24%
 CPU: 49°C | PWM: 0%
 CPU: 49°C | PWM: 0%
 ```
-Hit ^C to abort output
+Нажать ^C для прерывания команды, затем перезапустить сервис
+```
+$ sudo systemctl start fan-pwm.service
+```
