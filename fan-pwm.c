@@ -1,4 +1,4 @@
-# Based on https://github.com/bastilmr/opi5-fan-control
+// Based on https://github.com/bastilmr/opi5-fan-control
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
