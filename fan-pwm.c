@@ -24,6 +24,7 @@ void sigkill(int sig){
 }
 void sigint(int sig){
     softPwmWrite(FAN_PIN, 0);
+    exit (0);
 }
 
 void read_config(const char *cfg_path) {
