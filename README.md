@@ -1,5 +1,9 @@
 # fan-pwm-opi
 
+## Requirements:
+- Switch for fan control, connected to PD16 (by default)
+- or this https://github.com/evgs/kross-pi-hat
+
 ## How to use:
 
 First run ```remove-old-fan-script.sh``` to uninstall old script fan.sh from crontab
