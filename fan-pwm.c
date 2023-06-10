@@ -100,6 +100,7 @@ int main() {
 
         if (temp >= MAX_TEMP) {
             pwm_value = MAX_PWM;
+        }
         
         softPwmWrite(FAN_PIN, pwm_value);
         
