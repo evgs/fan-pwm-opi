@@ -39,6 +39,7 @@ void read_config(const char *cfg_path) {
         if (strcmp(co->key, "max_temp")==0) MAX_TEMP = atoi(co->value);
         if (strcmp(co->key, "min_pwm")==0) MIN_PWM = atoi(co->value);
         if (strcmp(co->key, "max_pwm")==0) MAX_PWM = atoi(co->value);
+        if (strcmp(co->key, "fan_pin")==0) MAX_PWM = atoi(co->value);
         if (strcmp(co->key, "pwm")==0) PWM_EN = atoi(co->value);
         //printf("Key: %s\nValue: %s\n", co->key, co->value);
         if (co->prev != NULL) {
