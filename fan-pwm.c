@@ -53,7 +53,7 @@ int main() {
     float temp_ratio, pwm_ratio;
     int pwm_value = 0;
  
-    read_config_file("~/fan-pwm-opi/fan.cfg");
+    read_config("/etc/fan.cfg");
     
     
     if (wiringPiSetup() == -1) {
