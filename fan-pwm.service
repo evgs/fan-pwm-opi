@@ -1,0 +1,13 @@
+[Unit]
+Description=Fan pwm service for CPU cooling
+#After=KlipperScreen.service
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+User=root
+ExecStart=/usr/local/bin/fan-pwm
+
+[Install]
+WantedBy=multi-user.target
