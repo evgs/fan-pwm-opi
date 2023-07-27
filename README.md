@@ -23,7 +23,8 @@ $ ./install.sh
 ```
 Если ранее был настроен скрипт fan.sh с запуском через crontab, потребуется его отключить, например, скриптом 
 ```shell 
-$ ./remove-old-fan-script.sh```
+$ ./remove-old-fan-script.sh
+```
 
 
 ## Настройка
