@@ -41,7 +41,7 @@ config_option_t read_config_file(const char* path) {
             free(co);
             continue;
         }
-        printf("Key: %s\nValue: %s\n", co->key, co->value);
+        //printf("Key: %s\nValue: %s\n", co->key, co->value);
         last_co_addr = co;
     }
     return last_co_addr;
