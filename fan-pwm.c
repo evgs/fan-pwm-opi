@@ -17,6 +17,8 @@ int MIN_PWM = 20;
 int MAX_PWM = 100;
 int PWM_EN = 1;
 
+int DBGOUT = 0;
+
 #define CPU_TEMP_FILE "/sys/class/thermal/thermal_zone0/temp"
 
 void sigkill(int sig){
@@ -43,6 +45,7 @@ void read_config(const char *cfg_path) {
         if (strcmp(co->key, "max_pwm")==0) MAX_PWM = atoi(co->value);
         if (strcmp(co->key, "fan_pin")==0) FAN_PIN = atoi(co->value);
         if (strcmp(co->key, "pwm")==0) PWM_EN = atoi(co->value);
+        if (strcmp(co->key, "debug")==0) DBGOUT = atoi(co->value);
         //printf("Key: %s\nValue: %s\n", co->key, co->value);
         if (co->prev != NULL) {
             co = co->prev;
@@ -104,7 +107,8 @@ int main() {
         
         softPwmWrite(FAN_PIN, pwm_value);
         
-        printf("CPU: %d°C | PWM: %d%%\n", temp, pwm_value);
+	if (DBGOUT)
+	    printf("CPU: %d°C | PWM: %d%%\n", temp, pwm_value);
         
         sleep(5);
     }
