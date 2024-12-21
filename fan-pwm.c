@@ -45,7 +45,6 @@ void read_config(const char *cfg_path) {
         if (strcmp(co->key, "max_pwm")==0) MAX_PWM = atoi(co->value);
         if (strcmp(co->key, "fan_pin")==0) FAN_PIN = atoi(co->value);
         if (strcmp(co->key, "pwm")==0) PWM_EN = atoi(co->value);
-        if (strcmp(co->key, "debug")==0) DBGOUT = atoi(co->value);
         //printf("Key: %s\nValue: %s\n", co->key, co->value);
         if (co->prev != NULL) {
             co = co->prev;
@@ -56,14 +55,19 @@ void read_config(const char *cfg_path) {
     
 }
 
-int main() {
+int main( int argc, char *argv[] ) {
     int temp;
     float temp_ratio, pwm_ratio;
     int pwm_value = 0;
  
     read_config("/etc/fan.cfg");
-    
-    
+
+    //check command line for --debug option
+    while (--argc) {
+        argv++;
+        if (strcmp(*argv, "--debug") == 0) DBGOUT=1;
+    } 
+	
     if (wiringPiSetup() == -1) {
         printf("wiringPiSetup failed\n");
         return 1;
