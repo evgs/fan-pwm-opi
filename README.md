@@ -69,7 +69,7 @@ $ sudo systemctl start fan-pwm.service
 ```
 $ sudo systemctl stop fan-pwm.service
 $ cd ~/fan-pwm-opi
-$ sudo ./fan-pwm
+$ sudo ./fan-pwm --debug
 ```
 
 В терминале можно наблюдать такие значения
