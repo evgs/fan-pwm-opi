@@ -16,6 +16,7 @@ int MAX_TEMP = 70;
 int MIN_PWM = 20;
 int MAX_PWM = 100;
 int PWM_EN = 1;
+int TEST_SPIN = 1;
 
 int DBGOUT = 0;
 
@@ -45,6 +46,8 @@ void read_config(const char *cfg_path) {
         if (strcmp(co->key, "max_pwm")==0) MAX_PWM = atoi(co->value);
         if (strcmp(co->key, "fan_pin")==0) FAN_PIN = atoi(co->value);
         if (strcmp(co->key, "pwm")==0) PWM_EN = atoi(co->value);
+        if (strcmp(co->key, "debug")==0) DBGOUT = atoi(co->value) ? 1:0;
+        if (strcmp(co->key, "test_spin")==0) TEST_SPIN = atoi(co->value) ? 1:0;
         //printf("Key: %s\nValue: %s\n", co->key, co->value);
         if (co->prev != NULL) {
             co = co->prev;
@@ -78,6 +81,12 @@ int main( int argc, char *argv[] ) {
     
     pinMode(FAN_PIN, OUTPUT);
     softPwmCreate(FAN_PIN, 0, MAX_PWM);
+
+    if (TEST_SPIN) {
+	// spin fan at maximum speed just after service start
+        softPwmWrite(FAN_PIN, MAX_PWM);
+	sleep(5);
+    }
     
     while(1) {
         FILE* temp_file = fopen(CPU_TEMP_FILE, "r");
